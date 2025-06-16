@@ -48,13 +48,13 @@
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: 0 0% 7%;
     --foreground: 210 40% 98%;
 
-    --card: 222.2 84% 4.9%;
+    --card: 0 0% 7%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 222.2 84% 4.9%;
+    --popover: 0 0% 7%;
     --popover-foreground: 210 40% 98%;
 
     --primary: 210 40% 98%;
@@ -92,7 +92,7 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-mono;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
@@ -112,6 +112,10 @@
   
   .trading-card {
     @apply bg-card/60 backdrop-blur-sm border border-border/50;
+  }
+
+  .sartoshi-brand {
+    @apply font-sartoshi;
   }
 }
 
