@@ -10,12 +10,27 @@ const TradingInterface = () => {
   const [selectedTab, setSelectedTab] = useState("buy");
   const [searchTerm, setSearchTerm] = useState("");
   const [amount, setAmount] = useState("");
-  const [selectedPercentage, setSelectedPercentage] = useState<number | null>(null);
+  const [selectedQuickAmount, setSelectedQuickAmount] = useState<number | null>(null);
 
-  const percentageButtons = [10, 25, 50, 75, 100];
+  // Different quick buttons for buy vs sell
+  const buyQuickAmounts = [0.5, 1, 2, 5, 10];
+  const sellPercentages = [10, 25, 50, 75, 100];
 
-  const handlePercentageClick = (percentage: number) => {
-    setSelectedPercentage(percentage);
+  const handleQuickAmountClick = (value: number) => {
+    setSelectedQuickAmount(value);
+    if (selectedTab === "buy") {
+      setAmount(value.toString());
+    } else {
+      // For sell, we might want to calculate based on percentage of holdings
+      // For now, just set the amount input to show the percentage selection
+      setAmount(`${value}%`);
+    }
+  };
+
+  const handleTabChange = (tab: string) => {
+    setSelectedTab(tab);
+    setSelectedQuickAmount(null);
+    setAmount("");
   };
 
   return (
@@ -41,7 +56,7 @@ const TradingInterface = () => {
             <Button
               variant={selectedTab === "buy" ? "default" : "ghost"}
               size="sm"
-              onClick={() => setSelectedTab("buy")}
+              onClick={() => handleTabChange("buy")}
               className="flex-1 rounded-md text-sm h-8"
             >
               buy
@@ -49,7 +64,7 @@ const TradingInterface = () => {
             <Button
               variant={selectedTab === "sell" ? "default" : "ghost"}
               size="sm"
-              onClick={() => setSelectedTab("sell")}
+              onClick={() => handleTabChange("sell")}
               className="flex-1 rounded-md text-sm h-8"
             >
               sell
@@ -60,7 +75,9 @@ const TradingInterface = () => {
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span>amount</span>
-              <span className="text-muted-foreground">0 token</span>
+              <span className="text-muted-foreground">
+                {selectedTab === "buy" ? "0 avax" : "0 token"}
+              </span>
             </div>
             <div className="relative">
               <Input
@@ -75,26 +92,42 @@ const TradingInterface = () => {
             </div>
           </div>
 
-          {/* Percentage Buttons */}
+          {/* Quick Amount/Percentage Buttons */}
           <div className="flex space-x-1">
-            {percentageButtons.map((percentage) => (
-              <Button
-                key={percentage}
-                variant={selectedPercentage === percentage ? "default" : "outline"}
-                size="sm"
-                onClick={() => handlePercentageClick(percentage)}
-                className="flex-1 text-xs h-8"
-              >
-                {percentage}%
-              </Button>
-            ))}
+            {selectedTab === "buy" ? (
+              // Buy mode: show quick amounts
+              buyQuickAmounts.map((amount) => (
+                <Button
+                  key={amount}
+                  variant={selectedQuickAmount === amount ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => handleQuickAmountClick(amount)}
+                  className="flex-1 text-xs h-8"
+                >
+                  {amount}
+                </Button>
+              ))
+            ) : (
+              // Sell mode: show percentages
+              sellPercentages.map((percentage) => (
+                <Button
+                  key={percentage}
+                  variant={selectedQuickAmount === percentage ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => handleQuickAmountClick(percentage)}
+                  className="flex-1 text-xs h-8"
+                >
+                  {percentage}%
+                </Button>
+              ))
+            )}
           </div>
 
           {/* You Receive */}
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span>you receive</span>
-              <span className="font-medium">0.00</span>
+              <span className="font-medium">10.00</span>
             </div>
             
             <div className="flex items-center justify-between">
